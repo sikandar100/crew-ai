@@ -10,10 +10,16 @@ class SimpleFlow(Flow):
     @start()
     def plan_content(self, crewai_trigger_payload: dict = None):
         if crewai_trigger_payload:
-            self.state["topic"] = crewai_trigger_payload.get("topic", "Hello from CrewAI")
+            topic = (
+                crewai_trigger_payload.get("topic")
+                or crewai_trigger_payload.get("message")
+                or crewai_trigger_payload.get("input")
+                or str(crewai_trigger_payload)
+            )
         else:
-            self.state["topic"] = "Hello from CrewAI"
+            topic = "Hello from CrewAI"
 
+        self.state["topic"] = topic
         return self.state["topic"]
 
     @listen(plan_content)
