@@ -20,6 +20,11 @@ class SimpleFlow(Flow):
         """
         topic = "Hello from CrewAI"
 
+        # When called locally via kickoff(inputs={...}), the platform does not
+        # pass inputs as method kwargs — they land in self.state instead.
+        if crewai_trigger_payload is None and isinstance(self.state, dict):
+            crewai_trigger_payload = self.state.get("crewai_trigger_payload")
+
         if crewai_trigger_payload is not None:
             if isinstance(crewai_trigger_payload, dict):
                 topic = (
@@ -40,7 +45,10 @@ class SimpleFlow(Flow):
         """
         Generate the final response content for the agent.
         """
-        final_post = f"# Test Output\n\nTopic received: {topic}\n"
+        from copilotkit_crewai_test.crews.content_crew.content_crew import ContentCrew
+
+        result = ContentCrew().crew().kickoff(inputs={"topic": topic})
+        final_post = result.raw
         self.state["final_post"] = final_post
         return final_post
 

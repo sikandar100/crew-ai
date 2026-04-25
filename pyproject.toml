@@ -13,6 +13,7 @@ kickoff = "copilotkit_crewai_test.main:kickoff"
 run_crew = "copilotkit_crewai_test.main:kickoff"
 plot = "copilotkit_crewai_test.main:plot"
 run_with_trigger = "copilotkit_crewai_test.main:run_with_trigger"
+serve = "copilotkit_crewai_test.api:app"
 
 [build-system]
 requires = ["hatchling"]
